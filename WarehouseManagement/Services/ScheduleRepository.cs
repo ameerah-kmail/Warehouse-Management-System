@@ -24,11 +24,13 @@ namespace WarehouseManagement.Services
 
         public async Task AddSchedule(Schedule schedule)
         {
-            
+            try
+            {
                 var FreeWarehouseLocations = from w in _context.WarehouseLocations
                                              join s in _context.Schedules
                                              on w.WarehouseLocationId equals s.WarehouseLocationId
                                              //where w.WarehouseLocationId == schedule.WarehouseLocationId
+                                             where schedule.expectedInDate >= DateTime.Today
                                              where schedule.expectedInDate >= s.expectedInDate
                                              select w;
 
@@ -38,10 +40,16 @@ namespace WarehouseManagement.Services
                     _context.Schedules.Add(schedule);
                     _context.SaveChanges();
                 }
-                else throw new Exception("there are no locations available.");
+                //else throw new Exception("there are no locations available.");
+            }
+            catch (Exception)
+            {
+                throw new Exception("there are no locations available.");
+            }
+                
 
             }
             
         }
     }
-}
+

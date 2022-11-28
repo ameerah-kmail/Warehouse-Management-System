@@ -11,6 +11,7 @@ namespace WarehouseManagement.Profiles
         public ScheduleProfile()
         {
             CreateMap<Entits.Schedule, Models.ScheduleDto>();
+            CreateMap<Models.ScheduleDto,Entits.Schedule>();
         }
        
     }
