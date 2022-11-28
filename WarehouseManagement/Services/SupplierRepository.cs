@@ -12,7 +12,7 @@ namespace WarehouseManagement.Services
         Task AddSupplier(Supplier supplier);
         void DeleteSupplier(Supplier supplier);
         Task<bool> AnySupplierExists(int supplierId);
-        Task<List<Package>> GetPackagesForSupplier(int supplierId);
+        List<Package> GetPackagesForSupplier(int supplierId);
     }
     public class SupplierRepository :ISupplierRepository
     {
@@ -48,9 +48,9 @@ namespace WarehouseManagement.Services
         {
             return  _context.Suppliers.AnyAsync(c => c.SupplierId == supplierId);
         }
-        public  Task<List<Package>> GetPackagesForSupplier(int supplierId)
+        public  List<Package> GetPackagesForSupplier(int supplierId)
         {
-            return _context.Packages.Where(p=>p.SupplierId==supplierId).ToListAsync();
+            return _context.Packages.Where(p=>p.SupplierId==supplierId).ToList();
         
         }
     }

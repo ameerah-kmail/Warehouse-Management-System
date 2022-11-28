@@ -12,7 +12,7 @@ namespace WarehouseManagement.Services
         Task AddCustomer(Customer customer);
         void DeleteCustomer(Customer customer);
         Task<bool> AnyCustomerExists(int customerId);
-        Task<List<Package>> GetPackagesForCustomer(int customerId);
+        List<Package> GetPackagesForCustomer(int customerId);
 
     }
     public class CustomerRepository : ICustomerRepository
@@ -29,10 +29,7 @@ namespace WarehouseManagement.Services
             _context.SaveChanges();
         }
 
-        public Task<bool> AnyCustomerExists(int customerId)
-        {
-            return _context.Customers.AnyAsync(c => c.CustomerId == customerId);
-        }
+       
 
         public async void DeleteCustomer(Customer customer)
         {
@@ -50,10 +47,14 @@ namespace WarehouseManagement.Services
             return await _context.Customers.Where
                 (i => i.CustomerId == customerId).FirstOrDefaultAsync();
         }
-
-        public Task<List<Package>> GetPackagesForCustomer(int customerId)
+        public Task<bool> AnyCustomerExists(int customerId)
         {
-            return _context.Packages.Where(p => p.CustomerId == customerId).ToListAsync();
+            return _context.Customers.AnyAsync(c => c.CustomerId == customerId);
+        }
+
+        public List<Package> GetPackagesForCustomer(int customerId)
+        {
+            return _context.Packages.Where(p => p.CustomerId == customerId).ToList();
         }
 
         

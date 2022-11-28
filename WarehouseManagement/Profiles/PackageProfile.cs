@@ -7,6 +7,7 @@ namespace WarehouseManagement.Profiles
         public PackageProfile()
         {
             CreateMap<Entits.Package,Models.PackageDto>();
+            CreateMap<Models.PackageDto,Entits.Package>();
         }
     }
 }

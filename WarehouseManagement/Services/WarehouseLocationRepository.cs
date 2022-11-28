@@ -7,12 +7,13 @@ namespace WarehouseManagement.Services
 {
     public interface IWarehouseLocationRepository 
     {
-        Task<IEnumerable<WarehouseLocation>> GetAllWarehouseLocationrs();
+        IEnumerable<WarehouseLocation> GetAllWarehouseLocationrs();
         Task<WarehouseLocation?> GetWarehouseLocation(int warehouseLocationId);
         Task AddWarehouseLocation(WarehouseLocation warehouseLocation);
         void DeleteWarehouseLocation(WarehouseLocation warehouseLocation);
-        Task<List<WarehouseLocation>> GetAllWarehouseLocationsToday();
-        Task<List<WarehouseLocation>> GetAllWarehouseLocationsInSpecificDate(DateTime specificDate);
+        IQueryable<WarehouseLocation> GetFreeWarehouseLocationsToday();
+        Task<IQueryable<WarehouseLocation>> GetFreeWarehouseLocationsInSpecificDate(DateTime specificDate);
+       
     }
     public class WarehouseLocationRepository :IWarehouseLocationRepository
     {
@@ -26,48 +27,48 @@ namespace WarehouseManagement.Services
         {
             _context.WarehouseLocations.Add(warehouseLocation);
             _context.SaveChanges();
-        }
+        }  
 
         public async void DeleteWarehouseLocation(WarehouseLocation warehouseLocation)
         {
             _context.WarehouseLocations.Remove(warehouseLocation);
             _context.SaveChanges();
         }
-
-        public async Task<IEnumerable<WarehouseLocation>> GetAllWarehouseLocationrs()
-        {
-            return await _context.WarehouseLocations.ToListAsync();
-        }
-
         public async Task<WarehouseLocation?> GetWarehouseLocation(int warehouseLocationId)
         {
             return await _context.WarehouseLocations.Where
                (i => i.WarehouseLocationId == warehouseLocationId).FirstOrDefaultAsync();
         }
-
-        public async Task<List<WarehouseLocation>> GetAllWarehouseLocationsToday()
+        public IEnumerable<WarehouseLocation> GetAllWarehouseLocationrs()
         {
-            var WarehouseLocationsToday = from w in _context.WarehouseLocations
-                                          join p in _context.Packages
-                                          on w.WarehouseLocationId equals p.WarehouseLocationId
-                                          where p.actualOutDate == DateTime.Today
-                                          where p.FlagIO==false
-                                          select w;
-            return WarehouseLocationsToday.ToList();
-
+            return  _context.WarehouseLocations.ToList();
         }
-        public async Task<List<WarehouseLocation>> GetAllWarehouseLocationsInSpecificDate(DateTime specificDate)
+
+        public  IQueryable<WarehouseLocation> GetFreeWarehouseLocationsToday()
         {
-            var WarehouseLocationsToday = from w in _context.WarehouseLocations
-                                          join p in _context.Packages
-                                          on w.WarehouseLocationId equals p.WarehouseLocationId
-                                          where p.actualOutDate == specificDate
-                                          where p.FlagIO == false
-                                          select w;
-            return WarehouseLocationsToday.ToList();
-        }
 
+            return from w in _context.WarehouseLocations
+                   join s in _context.Schedules
+                   on w.WarehouseLocationId equals s.WarehouseLocationId
+                   where s.actualOutDate <=DateTime.Today
+                   where s.expectedOutDate <= DateTime.Today
+                   select w;
 
 
         }
+       
+        public async Task<IQueryable<WarehouseLocation>> GetFreeWarehouseLocationsInSpecificDate(DateTime specificDate)
+        {
+            return from w in _context.WarehouseLocations
+                   join s in _context.Schedules
+                   on w.WarehouseLocationId equals s.WarehouseLocationId
+                   where specificDate >= DateTime.Today
+                   where s.actualOutDate <= specificDate
+                   where s.expectedOutDate <= specificDate
+                   select w;
+
+        }
+
+       
+    }
 }

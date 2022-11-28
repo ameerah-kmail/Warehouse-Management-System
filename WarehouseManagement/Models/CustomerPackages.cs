@@ -1,11 +1,12 @@
-﻿using WarehouseManagement.Entits;
+﻿using System.Collections.Generic;
+using WarehouseManagement.Entits;
 
 namespace WarehouseManagement.Models
 {
-    public class CustomerDto
+    public class CustomerPackages
     {
+        
         public int CustomerId { get; set; }
         public List<PackageDto> Packages { get; set; }
-            = new List<PackageDto>();
     }
 }

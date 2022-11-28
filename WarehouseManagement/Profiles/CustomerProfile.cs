@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using WarehouseManagement.Models;
 
 namespace WarehouseManagement.Profiles
 {
@@ -7,6 +8,7 @@ namespace WarehouseManagement.Profiles
         public CustomerProfile()
         {
             CreateMap<Entits.Customer,Models.CustomerDto>();
+            CreateMap<Entits.Customer, Models.CustomerPackages>();
         }
     }
 }

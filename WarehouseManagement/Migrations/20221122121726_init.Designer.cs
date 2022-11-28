@@ -12,8 +12,8 @@ using WarehouseManagement.Contexts;
 namespace WarehouseManagement.Migrations
 {
     [DbContext(typeof(WMSContext))]
-    [Migration("20221112202131_Init")]
-    partial class Init
+    [Migration("20221122121726_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,9 +83,6 @@ namespace WarehouseManagement.Migrations
                     b.Property<int>("Dimension")
                         .HasColumnType("int");
 
-                    b.Property<bool>("FlagIO")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -100,6 +97,28 @@ namespace WarehouseManagement.Migrations
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PackageId");
+
+                    b.HasIndex("ContainerId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("Packages");
+                });
+
+            modelBuilder.Entity("WarehouseManagement.Entits.Schedule", b =>
+                {
+                    b.Property<int>("ScheduleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScheduleId"));
+
+                    b.Property<int?>("PackageId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("WarehouseLocationId")
                         .HasColumnType("int");
@@ -116,17 +135,13 @@ namespace WarehouseManagement.Migrations
                     b.Property<DateTime>("expectedOutDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PackageId");
+                    b.HasKey("ScheduleId");
 
-                    b.HasIndex("ContainerId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("SupplierId");
+                    b.HasIndex("PackageId");
 
                     b.HasIndex("WarehouseLocationId");
 
-                    b.ToTable("Packages");
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("WarehouseManagement.Entits.Supplier", b =>
@@ -183,15 +198,24 @@ namespace WarehouseManagement.Migrations
                         .WithMany("Packages")
                         .HasForeignKey("SupplierId");
 
-                    b.HasOne("WarehouseManagement.Entits.WarehouseLocation", "warehouseLocation")
-                        .WithMany("Packages")
-                        .HasForeignKey("WarehouseLocationId");
-
                     b.Navigation("container");
 
                     b.Navigation("customer");
 
                     b.Navigation("supplier");
+                });
+
+            modelBuilder.Entity("WarehouseManagement.Entits.Schedule", b =>
+                {
+                    b.HasOne("WarehouseManagement.Entits.Package", "package")
+                        .WithMany("Schedules")
+                        .HasForeignKey("PackageId");
+
+                    b.HasOne("WarehouseManagement.Entits.WarehouseLocation", "warehouseLocation")
+                        .WithMany("Schedules")
+                        .HasForeignKey("WarehouseLocationId");
+
+                    b.Navigation("package");
 
                     b.Navigation("warehouseLocation");
                 });
@@ -206,6 +230,11 @@ namespace WarehouseManagement.Migrations
                     b.Navigation("Packages");
                 });
 
+            modelBuilder.Entity("WarehouseManagement.Entits.Package", b =>
+                {
+                    b.Navigation("Schedules");
+                });
+
             modelBuilder.Entity("WarehouseManagement.Entits.Supplier", b =>
                 {
                     b.Navigation("Packages");
@@ -213,7 +242,7 @@ namespace WarehouseManagement.Migrations
 
             modelBuilder.Entity("WarehouseManagement.Entits.WarehouseLocation", b =>
                 {
-                    b.Navigation("Packages");
+                    b.Navigation("Schedules");
                 });
 #pragma warning restore 612, 618
         }

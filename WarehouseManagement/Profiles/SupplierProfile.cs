@@ -6,7 +6,7 @@ namespace WarehouseManagement.Profiles
     {
         public SupplierProfile()
         {
-            CreateMap<Entits.Supplier,Models.SupplierDto > ();
+            CreateMap<Entits.Supplier,Models.SupplierDto> ();
         }
         
        

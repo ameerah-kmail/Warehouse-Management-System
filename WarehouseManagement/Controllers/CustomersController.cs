@@ -11,6 +11,9 @@ namespace WarehouseManagement.Controllers
     [Route("api/[controller]/[action]")]
     public class CustomersController : ControllerBase
     {
+
+
+
         private readonly ICustomerRepository _repository;
         private IMapper _mapper;
         public CustomersController(ICustomerRepository repository, IMapper mapper)
@@ -18,17 +21,17 @@ namespace WarehouseManagement.Controllers
             _repository = repository;
             _mapper = mapper;
         }
+
+
          [HttpGet("{customerId}")]
-         public async Task<ActionResult<List<Customer>>> GetPackagesForCustomer(int customerId)
+         public async Task<ActionResult<List<PackageDto>>> GetPackagesForCustomer(int customerId)
          {
              if (!await _repository.AnyCustomerExists(customerId))
                  return NotFound();
              var packagesForCustomerEntity = _repository
                  .GetPackagesForCustomer(customerId);
-             //return Ok(_mapper.Map<List<PackageDto>>(packagesForCustomerEntity));
-             return Ok((packagesForCustomerEntity));
-
-        }
-
+            var packages = _mapper.Map<List<PackageDto>>(packagesForCustomerEntity);
+            return Ok(packages);
+         }
     }
 }

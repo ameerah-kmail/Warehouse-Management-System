@@ -13,64 +13,28 @@ namespace WarehouseManagement.Controllers
     public class WarehouseLocationsController : ControllerBase
     {
         private readonly IWarehouseLocationRepository _repository;
-        
-        public WarehouseLocationsController(IWarehouseLocationRepository repository)
+        private readonly IMapper _mapper;
+
+        public WarehouseLocationsController(IWarehouseLocationRepository repository, IMapper mapper)
         {
             _repository = repository;
-            
+            _mapper = mapper;
+  
         }
         [HttpGet]
-        public async Task<ActionResult<List<WarehouseLocation>>> GetAll()
+        public async Task<ActionResult<List<WarehouseLocationDto>>> GetFreeWarehouseLocationsToday()
         {
-            return  Ok(await _repository.GetAllWarehouseLocationrs());
-        }
+            var WarehouseLocationEntities =  _repository.GetFreeWarehouseLocationsToday();
+            var WarehouseLocations = _mapper.Map<List<WarehouseLocationDto>>(WarehouseLocationEntities);
+            return Ok(WarehouseLocations);
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<WarehouseLocation>> Get(int id)
-        {
-            var _warehouseLocation =await _repository.GetWarehouseLocation(id);
-            if (_warehouseLocation == null)
-                return NotFound();
-            return Ok(_warehouseLocation);
-        }
-
-        [HttpDelete]
-        public async Task<ActionResult> Delete(WarehouseLocation _warehouseLocation)
-        {
-            var warehouseLocation =await _repository
-                .GetWarehouseLocation(_warehouseLocation.WarehouseLocationId);
-            if (warehouseLocation == null)
-                return NotFound();
-             _repository.DeleteWarehouseLocation(warehouseLocation);
-            return Ok();
-        }
-
-        [HttpPut]
-        public async Task<ActionResult> Update(WarehouseLocation _warehouseLocation)
-        {
-            var warehouseLocation =await _repository.GetWarehouseLocation(_warehouseLocation.WarehouseLocationId);
-            if (warehouseLocation == null)
-                return NotFound();
-            await _repository.AddWarehouseLocation(_warehouseLocation);
-            return Ok();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Create(WarehouseLocation _warehouseLocation)
-        {
-             
-            return  Ok( _repository.AddWarehouseLocation(_warehouseLocation));
-
-        }
+        } 
         [HttpGet]
-        public async Task<ActionResult<List<WarehouseLocation>>> GetAllWarehouseLocationsToday()
+        public async Task<ActionResult<List<WarehouseLocationDto>>> GetFreeWarehouseLocationsInSpecificDate(DateTime specificDate)
         {
-            return Ok(await _repository.GetAllWarehouseLocationsToday());
-        }
-        [HttpGet]
-        public async Task<ActionResult<List<WarehouseLocation>>> GetAllWarehouseLocationsInSpecificDate(DateTime specificDate)
-        {
-            return Ok(await _repository.GetAllWarehouseLocationsInSpecificDate(specificDate));
+            var WarehouseLocationEntities = await _repository.GetFreeWarehouseLocationsInSpecificDate(specificDate);
+            var WarehouseLocations = _mapper.Map<List<WarehouseLocationDto>>(WarehouseLocationEntities);
+            return Ok(WarehouseLocations);
         }
 
 

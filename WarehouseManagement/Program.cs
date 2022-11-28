@@ -35,7 +35,7 @@ builder.Services.AddScoped<IWarehouseLocationRepository, WarehouseLocationReposi
 builder.Services.AddScoped<IPackageRepository, PackageRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IContainerRepository, ContainerRepository>();
-
+builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

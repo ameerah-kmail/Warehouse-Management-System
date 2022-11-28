@@ -17,21 +17,31 @@ namespace WarehouseManagement.Controllers
             _repository = repository;
             _mapper = mapper;
         }
-        
+
         [HttpGet("~/Get All Packages In")]
-        public async Task<ActionResult<List<Package>>> GetAllPackagesIn()
+        public async Task<ActionResult<List<PackageDto>>> GetAllPackagesIn()
         {
-            return Ok(await _repository.GetAllPackagesIn());
+             var PackagesInEntities = await _repository.GetAllPackagesIn();
+             var Packages = _mapper.Map<List<PackageDto>>(PackagesInEntities);
+             return Ok( Packages);
+
         }
         [HttpGet("~/Get All Packages Out")]
-        public async Task<ActionResult<List<Package>>> GetAllPackagesout()
+        public async Task<ActionResult<List<PackageDto>>> GetAllPackagesOut()
         {
-            return Ok(await _repository.GetAllPackagesOut());
+            var PackagesOutEntities = await _repository.GetAllPackagesOut();
+            var Packages = _mapper.Map<List<PackageDto>>(PackagesOutEntities);
+            return Ok(Packages);
         }
-        [HttpGet("~/Get All Warehouse Location In Certain Period")]
-        public async Task<ActionResult<List<WarehouseLocation>>> GetAllPackagesInCertainPeriod(DateTime periodStart, DateTime periodEnd)
+
+        [HttpGet("~/Get Packages In Certain Period")]
+        public  List<CustomerPackages>
+        GetPackagesInPeriodGroupByCustomer
+           (DateTime periodStart, DateTime periodEnd)
         {
-            return Ok(await _repository.GetAllPackagesInCertainPeriod(periodStart, periodEnd));
+            var PackagesOutEntities =  _repository.GetPackagesInPeriodGroupByCustomer(periodStart, periodEnd);
+            var Packages = _mapper.Map<List<CustomerPackages>>(PackagesOutEntities);
+            return Packages;
         }
     }
 }

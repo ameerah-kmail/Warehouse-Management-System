@@ -10,6 +10,6 @@ namespace WarehouseManagement.Entits
         public int ContainerId { get; set; }
         public String Type { get; set; }
         public int Number { get; set; }
-        public List<Package>? Packages { get; set; } = new List<Package>();
+        public List<Package> Packages { get; set; } = new List<Package>();
     }
 }

@@ -8,8 +8,5 @@ namespace WarehouseManagement.Models
         public int WarehouseLocationId { get; set; }
         public int Capacity { get; set; }
         public int Dimension { get; set; }
-        public List<PackageDto>? Packages { get; set; } = new List<PackageDto>();
-       
-       
     }
 }

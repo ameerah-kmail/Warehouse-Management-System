@@ -11,11 +11,6 @@ namespace WarehouseManagement.Models
         public string Type { get; set; } = string.Empty;
         public int Dimension { get; set; }
         public string Note { get; set; } = string.Empty;
-        public bool FlagIO { get; set; }
-        public DateTime expectedInDate { get; set; }
-        public DateTime expectedOutDate { get; set; }
-        public DateTime actualInDate { get; set; }
-        public DateTime actualOutDate { get; set; }
 
     }
 }

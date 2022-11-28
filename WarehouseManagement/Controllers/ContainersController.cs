@@ -20,15 +20,15 @@ namespace WarehouseManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ContainerDto>>> GetAllContainers()
-        {
-            var containerEntities = await _repository.GetAllContainers();
-            var containers = _mapper.Map<List<ContainerDto>>(containerEntities);
-            return Ok(containers);
-        }
-
+         public async Task<ActionResult<List<ContainerDto>>> GetAllContainers()
+         {
+             var containerEntities = await _repository.GetAllContainers();
+             var containers = _mapper.Map<List<ContainerDto>>(containerEntities);
+             return Ok(containers);
+         }
+       
         [HttpGet("{id}")]
-        public async Task<ActionResult<ContainerDto>> get(int id)
+        public async Task<ActionResult<ContainerDto>> GetContainer(int id)
         {
             var containerEntity = await _repository.GetContainer(id);
             if (containerEntity == null)
@@ -37,30 +37,28 @@ namespace WarehouseManagement.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> Delete(int _containerId)
+        public async Task<ActionResult> DeleteContainer(int _containerId)
         {
             var containerEntity = await _repository.GetContainer(_containerId);
             if (containerEntity == null)
                 return NotFound();
-            //_mapper.Map<Containerr>(containerEntity);
             _repository.DeleteContainer(_containerId);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<ActionResult> update(ContainerDto _containerDto)
+        public async Task<ActionResult> UpdateContainer(ContainerDto _containerDto)
         {
-            var container = await _repository.GetContainer(_containerDto.ContainerId);
-            
-            var containerEntity= _mapper.Map<Containerr>(container);
+            var containerEntity = await _repository.GetContainer(_containerDto.ContainerId);
             if (containerEntity == null)
                 return NotFound();
-             _repository.UpdateContainer(containerEntity);
-            return Ok();
+            _mapper.Map(_containerDto, containerEntity);
+             _repository.UpdateContainer();
+            return NoContent();
         }
 
         [HttpPost]
-        public async Task<ActionResult> create(ContainerDto _containerDto)
+        public async Task<ActionResult> AddContainer(ContainerDto _containerDto)
         {
            
             var containerEntity = _mapper.Map<Containerr>(_containerDto);

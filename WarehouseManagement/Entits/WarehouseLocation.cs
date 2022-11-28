@@ -10,6 +10,6 @@ namespace WarehouseManagement.Entits
         public int WarehouseLocationId { get; set; }
         public int Capacity { get; set; }
         public int Dimension { get; set; }
-        public List<Package>? Packages { get; set; } = new List<Package>();
+        public List<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }

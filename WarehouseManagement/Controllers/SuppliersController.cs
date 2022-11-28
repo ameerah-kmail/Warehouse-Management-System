@@ -19,14 +19,15 @@ namespace WarehouseManagement.Controllers
         }
 
         [HttpGet("{supplierId}")]
-        public async Task<ActionResult<List<Package>>> GetPackagesForSupplier(int supplierId)
+        public async Task<ActionResult<List<PackageDto>>> GetPackagesForSupplier(int supplierId)
         {
             if (!await _repository.AnySupplierExists(supplierId))
                 return NotFound();
             var packagesForSupplierEntity = _repository
                 .GetPackagesForSupplier(supplierId);
-           // return Ok(_mapper.Map<List<PackageDto>>(packagesForSupplierEntity));
-            return Ok((packagesForSupplierEntity));
+
+            var packages = _mapper.Map<List<PackageDto>>(packagesForSupplierEntity);
+            return Ok(packages);
 
         }
     }
